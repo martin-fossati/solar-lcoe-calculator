@@ -9,6 +9,38 @@ st.set_page_config(
     layout="wide"
 )
 
+# Light visual customisation for the app and data tables
+st.markdown(
+    """
+    <style>
+    html, body, [class*="css"] {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    div[data-testid="stMetric"] {
+        border: 1px solid rgba(49, 51, 63, 0.16);
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        background: rgba(245, 247, 250, 0.65);
+    }
+    div[data-testid="stMetricValue"] {
+        font-weight: 700;
+    }
+    .comparison-banner {
+        border: 1px solid rgba(49, 51, 63, 0.16);
+        border-radius: 10px;
+        padding: 0.85rem 1rem;
+        margin: 0.25rem 0 1rem 0;
+        background: rgba(245, 247, 250, 0.65);
+        text-align: center;
+    }
+    .comparison-banner strong {
+        font-size: 1.2rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # -----------------------------
 # Fixed model assumptions
 # -----------------------------
@@ -338,7 +370,7 @@ def build_sensitivity(params, method):
     return sensitivity
 
 
-def format_building_blocks(results):
+def format_building_blocks(results, currency_symbol):
     return pd.DataFrame(
         {
             "Metric": [
@@ -350,12 +382,78 @@ def format_building_blocks(results):
             ],
             "Value": [
                 f"{results['Energy']:,.0f} MWh",
-                f"£{results['Costs']:,.0f}k",
+                f"{currency_symbol}{results['Costs']:,.0f}k",
                 f"{results['NPV Energy']:,.0f} MWh",
-                f"£{results['NPV Costs']:,.0f}k",
-                f"£{results['LCOE']:,.1f}/MWh"
+                f"{currency_symbol}{results['NPV Costs']:,.0f}k",
+                f"{currency_symbol}{results['LCOE']:,.1f}/MWh"
             ]
         }
+    )
+
+
+def style_building_blocks(table):
+    return (
+        table.style
+        .set_properties(**{
+            "font-family": "Arial, Helvetica, sans-serif",
+            "font-size": "14px"
+        })
+        .set_properties(
+            subset=["Metric"],
+            **{"font-weight": "600"}
+        )
+        .set_properties(
+            subset=["Value"],
+            **{"font-weight": "600", "text-align": "right"}
+        )
+        .set_table_styles([
+            {
+                "selector": "th",
+                "props": [
+                    ("font-family", "Arial, Helvetica, sans-serif"),
+                    ("font-weight", "700"),
+                    ("background-color", "#1f4e5f"),
+                    ("color", "white")
+                ]
+            }
+        ])
+    )
+
+
+def style_sensitivity(table):
+    # Highlight the base case at the centre of the 5x5 table.
+    styles = pd.DataFrame(
+        "",
+        index=table.index,
+        columns=table.columns
+    )
+    styles.iloc[2, 2] = (
+        "background-color: #d9ead3; "
+        "font-weight: 700; "
+        "border: 2px solid #548235;"
+    )
+
+    return (
+        table.style
+        .format("{:.1f}")
+        .apply(lambda _: styles, axis=None)
+        .set_properties(**{
+            "font-family": "Arial, Helvetica, sans-serif",
+            "font-size": "13px",
+            "text-align": "center"
+        })
+        .set_table_styles([
+            {
+                "selector": "th",
+                "props": [
+                    ("font-family", "Arial, Helvetica, sans-serif"),
+                    ("font-weight", "700"),
+                    ("background-color", "#1f4e5f"),
+                    ("color", "white"),
+                    ("text-align", "center")
+                ]
+            }
+        ])
     )
 
 
@@ -372,9 +470,22 @@ st.write(
 
 st.subheader("User inputs")
 
+currency_options = {
+    "GBP (£)": "£",
+    "USD ($)": "$",
+    "EUR (€)": "€"
+}
+
 input_col_1, input_col_2, input_col_3 = st.columns(3)
 
 with input_col_1:
+    currency_name = st.selectbox(
+        "Currency",
+        options=list(currency_options.keys()),
+        index=0
+    )
+    currency_symbol = currency_options[currency_name]
+
     plant_capacity = st.number_input(
         "Plant capacity (MW)",
         min_value=1.0,
@@ -389,21 +500,30 @@ with input_col_1:
         step=25.0
     )
 
+with input_col_2:
     capex_per_mw = st.number_input(
-        "CAPEX (£000/MW)",
+        f"CAPEX ({currency_symbol}000/MW)",
         min_value=0.0,
         value=650.0,
         step=25.0
     )
 
-with input_col_2:
     opex_per_mw = st.number_input(
-        "OPEX (£000/MW/year)",
+        f"OPEX ({currency_symbol}000/MW/year)",
         min_value=0.0,
         value=25.0,
         step=1.0
     )
 
+    gearing = st.number_input(
+        "Gearing ratio (% debt / total funding)",
+        min_value=0.0,
+        max_value=100.0,
+        value=70.0,
+        step=1.0
+    ) / 100
+
+with input_col_3:
     cost_of_debt = st.number_input(
         "Cost of debt (%)",
         min_value=0.0,
@@ -419,20 +539,6 @@ with input_col_2:
         value=8.0,
         step=0.25
     ) / 100
-
-with input_col_3:
-    gearing = st.number_input(
-        "Gearing ratio (% debt / total funding)",
-        min_value=0.0,
-        max_value=100.0,
-        value=70.0,
-        step=1.0
-    ) / 100
-
-    st.info(
-        "Inflation, tax, degradation and curtailment are fixed assumptions "
-        "in this online calculator."
-    )
 
 params = {
     **FIXED_ASSUMPTIONS,
@@ -462,37 +568,56 @@ adjusted_sensitivity = build_sensitivity(
 
 st.divider()
 
-standard_col, adjusted_col = st.columns(2)
+comparison_difference = (
+    adjusted_results["LCOE"] - standard_results["LCOE"]
+)
+comparison_percentage = (
+    comparison_difference / standard_results["LCOE"]
+    if standard_results["LCOE"] != 0
+    else 0
+)
+
+st.markdown(
+    f"""
+    <div class="comparison-banner">
+        Adjusted LCOE compared with standard methodology<br>
+        <strong>{currency_symbol}{comparison_difference:+,.1f}/MWh ({comparison_percentage:+.1%})</strong>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+standard_col, adjusted_col = st.columns(2, gap="large")
 
 with standard_col:
     st.header("Standard LCOE")
 
     st.metric(
         "Calculated LCOE",
-        f"£{standard_results['LCOE']:,.1f}/MWh"
+        f"{currency_symbol}{standard_results['LCOE']:,.1f}/MWh"
     )
 
-    st.caption(
-        f"Standard WACC: "
+    st.metric(
+        "Standard WACC",
         f"{discount_rates['standard_WACC']:.2%}"
     )
 
     st.subheader("Building blocks")
-
     st.dataframe(
-        format_building_blocks(standard_results),
+        style_building_blocks(
+            format_building_blocks(standard_results, currency_symbol)
+        ),
         hide_index=True,
         use_container_width=True
     )
 
     st.subheader("Sensitivity")
-
     st.caption(
-        "Rows show the standard WACC; columns show electricity yield."
+        "Rows show standard WACC; columns show electricity yield. "
+        "The base case is highlighted."
     )
-
     st.dataframe(
-        standard_sensitivity.style.format("{:.1f}"),
+        style_sensitivity(standard_sensitivity),
         use_container_width=True
     )
 
@@ -501,36 +626,30 @@ with adjusted_col:
 
     st.metric(
         "Calculated LCOE",
-        f"£{adjusted_results['LCOE']:,.1f}/MWh",
-        delta=(
-            f"{adjusted_results['LCOE'] - standard_results['LCOE']:+.1f} "
-            "vs standard"
-        )
+        f"{currency_symbol}{adjusted_results['LCOE']:,.1f}/MWh"
     )
 
-    st.caption(
-        f"Adjusted nominal WACC: "
-        f"{discount_rates['adjusted_WACC_nom']:.2%} | "
-        f"Adjusted real WACC: "
+    st.metric(
+        "Adjusted real WACC",
         f"{discount_rates['adjusted_WACC_real']:.2%}"
     )
 
     st.subheader("Building blocks")
-
     st.dataframe(
-        format_building_blocks(adjusted_results),
+        style_building_blocks(
+            format_building_blocks(adjusted_results, currency_symbol)
+        ),
         hide_index=True,
         use_container_width=True
     )
 
     st.subheader("Sensitivity")
-
     st.caption(
-        "Rows show the adjusted real WACC; columns show electricity yield."
+        "Rows show adjusted real WACC; columns show electricity yield. "
+        "The base case is highlighted."
     )
-
     st.dataframe(
-        adjusted_sensitivity.style.format("{:.1f}"),
+        style_sensitivity(adjusted_sensitivity),
         use_container_width=True
     )
 
@@ -573,8 +692,7 @@ st.info(
     "provides access to the complete assumption set and detailed calculations."
 )
 
-# Replace the placeholder below with the actual product page.
 st.link_button(
-    "View the full Excel model",
-    "https://infraeconomics.co.uk/calculator-tools/"
+    "Purchase the full Excel model",
+    "https://infraeconomics.lemonsqueezy.com/checkout/buy/be7dae5b-1f3c-455b-9541-835f44ab4198"
 )
