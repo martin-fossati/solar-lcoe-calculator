@@ -60,7 +60,13 @@ def build_model(params):
     )
 
     progress_ratio = df["construction_period"] / params["con_length"]
-    raw_s_curve = norm.cdf(progress_ratio * 4 - 2)
+
+    # scipy returns a NumPy array; convert it back to a pandas Series
+    # so that it retains the model timeline index and supports .loc.
+    raw_s_curve = pd.Series(
+        norm.cdf(progress_ratio * 4 - 2),
+        index=df.index
+    )
 
     construction_mask = df["construction_timeline"] == 1
     s_min = raw_s_curve.loc[construction_mask].min()
