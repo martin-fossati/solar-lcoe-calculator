@@ -104,42 +104,82 @@ st.markdown(
     }
     .model-cta {
         background: #0d3b66;
-        border-radius: 12px;
-        padding: 1.35rem 1.5rem;
-        margin: 1rem 0 1.25rem 0;
+        border-radius: 14px;
+        padding: 2rem 2rem 2.15rem 2rem;
+        margin: 1.35rem auto 1.5rem auto;
+        color: white;
         text-align: center;
-        color: white;
     }
-    .model-cta h3 {
+    .model-cta-inner {
+        max-width: 900px;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .model-cta h2 {
         color: white;
-        margin: 0 0 0.8rem 0;
-        font-size: 2rem;
-        line-height: 1.25;
+        margin: 0 auto 1rem auto;
+        font-size: 2.15rem;
+        line-height: 1.2;
         font-weight: 800;
         text-align: center;
     }
-    .model-cta p {
+    .model-cta .intro {
         color: white;
-        margin: 0 auto 1.2rem auto;
-        max-width: 920px;
-        font-size: 1.15rem;
-        line-height: 1.7;
+        margin: 0 auto 1rem auto;
+        max-width: 820px;
+        font-size: 1.18rem;
+        line-height: 1.65;
         text-align: center;
     }
-    .model-cta a {
+    .model-cta ul {
         display: inline-block;
+        max-width: 760px;
+        margin: 0.25rem auto 1.45rem auto;
+        padding-left: 1.4rem;
+        color: white;
+        text-align: left;
+        font-size: 1.05rem;
+        line-height: 1.65;
+    }
+    .model-cta-button-wrap {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+    .model-cta a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: min(100%, 520px);
+        min-height: 58px;
         background: white;
         color: #0d3b66 !important;
         text-decoration: none;
         font-weight: 800;
-        font-size: 1.08rem;
-        padding: 0.9rem 1.8rem;
-        border-radius: 9px;
-        min-width: 310px;
+        font-size: 1.15rem;
+        line-height: 1.25;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        text-align: center;
     }
     .model-cta a:hover {
         background: #eef6fb;
         text-decoration: none;
+    }
+    @media (max-width: 700px) {
+        .model-cta {
+            padding: 1.5rem 1rem 1.65rem 1rem;
+        }
+        .model-cta h2 {
+            font-size: 1.7rem;
+        }
+        .model-cta .intro {
+            font-size: 1.04rem;
+        }
+        .model-cta ul {
+            font-size: 1rem;
+        }
     }
     </style>
     """,
@@ -810,18 +850,32 @@ st.caption(
 
 st.markdown(
     """
-    <div class="model-cta">
-        <h3>Run a detailed solar project finance analysis</h3>
-        <p>
-            The full Excel model allows you to run detailed calculations for a
-            solar plant, assess project economics, price PPA contracts, size
-            project-finance debt and review the overall financial feasibility of
-            a solar investment using a complete set of project assumptions.
-        </p>
-        <a href="https://infraeconomics.co.uk/solar-plant-project-finance-model/" target="_blank">
-            Explore the Solar Project Finance Model
-        </a>
-    </div>
+    <section class="model-cta">
+        <div class="model-cta-inner">
+            <h2>Run a Detailed Solar Project Finance Analysis</h2>
+
+            <p class="intro">
+                Move beyond a high-level LCOE estimate with the professional
+                Solar Plant Project Finance Model. The model provides a complete
+                framework to assess the financial and economic feasibility of a
+                solar project.
+            </p>
+
+            <ul>
+                <li>Price PPA contracts to achieve target investment returns.</li>
+                <li>Size project-finance debt using indicative lender terms.</li>
+                <li>Calculate project and sponsor IRR and NPV.</li>
+                <li>Review funding requirements, financial statements and debt covenants.</li>
+                <li>Test project assumptions through scenarios and sensitivities.</li>
+            </ul>
+
+            <div class="model-cta-button-wrap">
+                <a href="https://infraeconomics.co.uk/solar-plant-project-finance-model/" target="_blank">
+                    Explore the Solar Project Finance Model
+                </a>
+            </div>
+        </div>
+    </section>
     """,
     unsafe_allow_html=True
 )
