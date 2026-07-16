@@ -112,14 +112,19 @@ st.markdown(
     }
     .model-cta h3 {
         color: white;
-        margin: 0 0 0.55rem 0;
-        font-size: 1.35rem;
+        margin: 0 0 0.8rem 0;
+        font-size: 2rem;
+        line-height: 1.25;
+        font-weight: 800;
+        text-align: center;
     }
     .model-cta p {
         color: white;
-        margin: 0 auto 1rem auto;
-        max-width: 850px;
-        line-height: 1.55;
+        margin: 0 auto 1.2rem auto;
+        max-width: 920px;
+        font-size: 1.15rem;
+        line-height: 1.7;
+        text-align: center;
     }
     .model-cta a {
         display: inline-block;
@@ -528,9 +533,10 @@ def style_sensitivity(table):
         columns=table.columns
     )
     styles.iloc[2, 2] = (
-        "background-color: #d9ead3; "
+        "background-color: #dbeef8; "
+        "color: #0d3b66; "
         "font-weight: 700; "
-        "border: 2px solid #548235;"
+        "border: 2px solid #7fb3d5;"
     )
 
     return (
@@ -764,9 +770,7 @@ st.divider()
 
 st.subheader("Other model assumptions")
 
-assumption_col_1, assumption_col_2, assumption_col_3, assumption_col_4 = (
-    st.columns(4)
-)
+assumption_col_1, assumption_col_2, assumption_col_3 = st.columns(3)
 
 assumption_col_1.metric(
     "Inflation",
@@ -783,14 +787,25 @@ assumption_col_3.metric(
     f"{params['degradation_rate']:.1%}"
 )
 
+assumption_col_4, assumption_col_5, assumption_col_6 = st.columns(3)
+
 assumption_col_4.metric(
     "Curtailment",
     f"{params['curtailment']:.1%}"
 )
 
+assumption_col_5.metric(
+    "Construction length",
+    f"{params['con_length']} months"
+)
+
+assumption_col_6.metric(
+    "Operational life",
+    f"{params['asset_life']} years"
+)
+
 st.caption(
-    "The calculator also assumes a 25-year operating life, a 9-month "
-    "construction period and a fixed monthly production profile."
+    "The calculator also assumes a fixed monthly electricity production profile."
 )
 
 st.markdown(
