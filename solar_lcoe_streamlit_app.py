@@ -102,85 +102,6 @@ st.markdown(
         border-radius: 8px;
         font-weight: 700;
     }
-    .model-cta {
-        background: #0d3b66;
-        border-radius: 14px;
-        padding: 2rem 2rem 2.15rem 2rem;
-        margin: 1.35rem auto 1.5rem auto;
-        color: white;
-        text-align: center;
-    }
-    .model-cta-inner {
-        max-width: 900px;
-        margin: 0 auto;
-        text-align: center;
-    }
-    .model-cta h2 {
-        color: white;
-        margin: 0 auto 1rem auto;
-        font-size: 2.15rem;
-        line-height: 1.2;
-        font-weight: 800;
-        text-align: center;
-    }
-    .model-cta .intro {
-        color: white;
-        margin: 0 auto 1rem auto;
-        max-width: 820px;
-        font-size: 1.18rem;
-        line-height: 1.65;
-        text-align: center;
-    }
-    .model-cta ul {
-        display: inline-block;
-        max-width: 760px;
-        margin: 0.25rem auto 1.45rem auto;
-        padding-left: 1.4rem;
-        color: white;
-        text-align: left;
-        font-size: 1.05rem;
-        line-height: 1.65;
-    }
-    .model-cta-button-wrap {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
-    .model-cta a {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-        width: min(100%, 520px);
-        min-height: 58px;
-        background: white;
-        color: #0d3b66 !important;
-        text-decoration: none;
-        font-weight: 800;
-        font-size: 1.15rem;
-        line-height: 1.25;
-        padding: 1rem 1.5rem;
-        border-radius: 10px;
-        text-align: center;
-    }
-    .model-cta a:hover {
-        background: #eef6fb;
-        text-decoration: none;
-    }
-    @media (max-width: 700px) {
-        .model-cta {
-            padding: 1.5rem 1rem 1.65rem 1rem;
-        }
-        .model-cta h2 {
-            font-size: 1.7rem;
-        }
-        .model-cta .intro {
-            font-size: 1.04rem;
-        }
-        .model-cta ul {
-            font-size: 1rem;
-        }
-    }
     </style>
     """,
     unsafe_allow_html=True
@@ -850,35 +771,72 @@ st.caption(
 
 st.markdown(
     """
-    <section class="model-cta">
-        <div class="model-cta-inner">
-            <h2>Run a Detailed Solar Project Finance Analysis</h2>
-
-            <p class="intro">
-                Move beyond a high-level LCOE estimate with the professional
-                Solar Plant Project Finance Model. The model provides a complete
-                framework to assess the financial and economic feasibility of a
-                solar project.
-            </p>
-
-            <ul>
-                <li>Price PPA contracts to achieve target investment returns.</li>
-                <li>Size project-finance debt using indicative lender terms.</li>
-                <li>Calculate project and sponsor IRR and NPV.</li>
-                <li>Review funding requirements, financial statements and debt covenants.</li>
-                <li>Test project assumptions through scenarios and sensitivities.</li>
-            </ul>
-
-            <div class="model-cta-button-wrap">
-                <a href="https://infraeconomics.co.uk/solar-plant-project-finance-model/" target="_blank">
-                    Explore the Solar Project Finance Model
-                </a>
-            </div>
+    <div style="
+        background:#0d3b66;
+        border-radius:14px 14px 0 0;
+        padding:1.8rem 1.5rem 0.9rem 1.5rem;
+        text-align:center;
+        color:white;
+    ">
+        <div style="
+            color:white;
+            font-size:2.05rem;
+            line-height:1.2;
+            font-weight:800;
+            margin-bottom:0.9rem;
+        ">
+            Run a Detailed Solar Project Finance Analysis
         </div>
-    </section>
+        <div style="
+            color:white;
+            font-size:1.15rem;
+            line-height:1.65;
+            max-width:850px;
+            margin:0 auto;
+        ">
+            Move beyond a high-level LCOE estimate with the professional
+            Solar Plant Project Finance Model. Assess the financial and economic
+            feasibility of a solar project using a detailed, integrated framework.
+        </div>
+    </div>
     """,
     unsafe_allow_html=True
 )
+
+with st.container(border=True):
+    feature_left, feature_right = st.columns(2)
+
+    with feature_left:
+        st.markdown(
+            """
+            **The professional model enables users to:**
+
+            - Price PPA contracts to achieve target investment returns.
+            - Size project-finance debt using indicative lender terms.
+            - Calculate project and sponsor IRR and NPV.
+            """
+        )
+
+    with feature_right:
+        st.markdown(
+            """
+            **Review the complete project case:**
+
+            - Analyse funding requirements and financial statements.
+            - Review key debt covenants and repayment capacity.
+            - Test project assumptions through scenarios and sensitivities.
+            """
+        )
+
+    button_left, button_centre, button_right = st.columns([1, 2.4, 1])
+
+    with button_centre:
+        st.link_button(
+            "Explore the Solar Project Finance Model",
+            "https://infraeconomics.co.uk/solar-plant-project-finance-model/",
+            use_container_width=True,
+            type="primary"
+        )
 
 st.divider()
 
