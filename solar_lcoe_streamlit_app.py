@@ -1,3 +1,7 @@
+coe_streamlit_app_branded_v2.py
+
+
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -16,25 +20,124 @@ st.markdown(
     html, body, [class*="css"] {
         font-family: Arial, Helvetica, sans-serif;
     }
+    .stApp {
+        background: #ffffff;
+    }
+    header[data-testid="stHeader"] {
+        background: transparent;
+    }
+    #MainMenu, footer {
+        visibility: hidden;
+    }
+    .block-container {
+        padding-top: 1.25rem;
+        padding-bottom: 2.5rem;
+        max-width: 1400px;
+    }
+    .ie-hero {
+        background: linear-gradient(135deg, #0d3b66 0%, #1f6f9f 100%);
+        color: white;
+        border-radius: 0 0 18px 18px;
+        padding: 2.2rem 2.4rem;
+        margin: -1.25rem -1rem 1.8rem -1rem;
+        border-bottom: 6px solid #dbeaf4;
+    }
+    .ie-brand {
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 0.55rem;
+        opacity: 0.95;
+    }
+    .ie-hero h1 {
+        color: white;
+        margin: 0 0 0.45rem 0;
+        font-size: 2.25rem;
+    }
+    .ie-hero p {
+        color: white;
+        margin: 0;
+        max-width: 850px;
+        font-size: 1.05rem;
+        line-height: 1.55;
+    }
     div[data-testid="stMetric"] {
         border: 1px solid rgba(49, 51, 63, 0.16);
         border-radius: 10px;
         padding: 0.8rem 1rem;
-        background: rgba(245, 247, 250, 0.65);
+        background: #f7fafc;
     }
     div[data-testid="stMetricValue"] {
         font-weight: 700;
+        color: #0d3b66;
     }
     .comparison-banner {
-        border: 1px solid rgba(49, 51, 63, 0.16);
+        border: 1px solid #c9dce9;
         border-radius: 10px;
         padding: 0.85rem 1rem;
         margin: 0.25rem 0 1rem 0;
-        background: rgba(245, 247, 250, 0.65);
+        background: #eef6fb;
         text-align: center;
     }
     .comparison-banner strong {
         font-size: 1.2rem;
+        color: #0d3b66;
+    }
+    .methodology-box {
+        background: #f4f8fb;
+        border-left: 5px solid #1f6f9f;
+        border-radius: 8px;
+        padding: 1.1rem 1.25rem;
+        margin: 0.75rem 0 1.25rem 0;
+        line-height: 1.6;
+    }
+    .methodology-box h3 {
+        color: #0d3b66;
+        margin-top: 0;
+    }
+    .nav-heading {
+        text-align: center;
+        color: #0d3b66;
+        margin-top: 0.5rem;
+    }
+    div.stButton > button, div[data-testid="stLinkButton"] > a {
+        border-radius: 8px;
+        font-weight: 700;
+    }
+    .model-cta {
+        background: #0d3b66;
+        border-radius: 12px;
+        padding: 1.35rem 1.5rem;
+        margin: 1rem 0 1.25rem 0;
+        text-align: center;
+        color: white;
+    }
+    .model-cta h3 {
+        color: white;
+        margin: 0 0 0.55rem 0;
+        font-size: 1.35rem;
+    }
+    .model-cta p {
+        color: white;
+        margin: 0 auto 1rem auto;
+        max-width: 850px;
+        line-height: 1.55;
+    }
+    .model-cta a {
+        display: inline-block;
+        background: white;
+        color: #0d3b66 !important;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 1.08rem;
+        padding: 0.9rem 1.8rem;
+        border-radius: 9px;
+        min-width: 310px;
+    }
+    .model-cta a:hover {
+        background: #eef6fb;
+        text-decoration: none;
     }
     </style>
     """,
@@ -460,12 +563,19 @@ def style_sensitivity(table):
 # -----------------------------
 # App interface
 # -----------------------------
-st.title("Solar LCOE Calculator")
-
-st.write(
-    "Compare the standard LCOE methodology with an adjusted approach "
-    "that removes future inflation from the discount rate and includes "
-    "the tax impact in the cost of capital."
+st.markdown(
+    """
+    <section class="ie-hero">
+        <div class="ie-brand">Infrastructure Economics</div>
+        <h1>Solar LCOE Calculator</h1>
+        <p>
+            Compare the standard Levelized Cost of Energy methodology with an
+            adjusted approach that removes future inflation from the discount
+            rate and incorporates the effect of corporation tax.
+        </p>
+    </section>
+    """,
+    unsafe_allow_html=True
 )
 
 st.subheader("User inputs")
@@ -686,13 +796,73 @@ st.caption(
     "construction period and a fixed monthly production profile."
 )
 
-st.info(
-    "Need to change inflation, tax, degradation, curtailment, construction "
-    "timing or other project-specific assumptions? The full Excel model "
-    "provides access to the complete assumption set and detailed calculations."
+st.markdown(
+    """
+    <div class="model-cta">
+        <h3>Run a detailed solar project finance analysis</h3>
+        <p>
+            The full Excel model allows you to run detailed calculations for a
+            solar plant, assess project economics, price PPA contracts, size
+            project-finance debt and review the overall financial feasibility of
+            a solar investment using a complete set of project assumptions.
+        </p>
+        <a href="https://infraeconomics.co.uk/solar-plant-project-finance-model/" target="_blank">
+            Explore the Solar Project Finance Model
+        </a>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
 
-st.link_button(
-    "Purchase the full Excel model",
-    "https://infraeconomics.lemonsqueezy.com/checkout/buy/be7dae5b-1f3c-455b-9541-835f44ab4198"
+st.divider()
+
+st.markdown(
+    """
+    <div class="methodology-box">
+        <h3>Why adjust the standard LCOE?</h3>
+        <p>
+            A conventional LCOE calculation normally projects operating costs in
+            nominal terms and discounts them using a nominal cost of capital. The
+            resulting figure therefore embeds future inflation. When it is
+            interpreted as the electricity price required today, it can overstate
+            the initial price needed to achieve the target investment return,
+            particularly where a PPA or market price is expected to increase with
+            inflation.
+        </p>
+        <p>
+            The adjusted calculation removes inflation from both operating costs
+            and the discount rate, producing an LCOE expressed in today's money.
+            It also adjusts the cost of capital for corporation tax by removing the
+            debt tax shield and grossing up the equity return. This provides a more
+            representative estimate of the electricity price required to deliver
+            the investor's targeted post-tax return.
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
+
+st.markdown('<h3 class="nav-heading">Continue exploring Infrastructure Economics</h3>', unsafe_allow_html=True)
+
+nav_col_1, nav_col_2, nav_col_3 = st.columns(3)
+
+with nav_col_1:
+    st.link_button(
+        "Return to the LCOE calculator page",
+        "https://infraeconomics.co.uk/lcoe-calculator/",
+        use_container_width=True
+    )
+
+with nav_col_2:
+    st.link_button(
+        "Electricity prices and solar investment",
+        "https://infraeconomics.co.uk/2026/07/13/are-electricity-prices-high-enough-to-justify-investing-in-a-solar-plant/",
+        use_container_width=True
+    )
+
+with nav_col_3:
+    st.link_button(
+        "Read the practical LCOE guide",
+        "https://infraeconomics.co.uk/2026/07/09/the-levelized-cost-of-energy-lcoe-a-practical-guide-for-solar-investors/",
+        use_container_width=True
+    )
