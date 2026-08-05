@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -100,6 +101,18 @@ st.markdown(
     div.stButton > button, div[data-testid="stLinkButton"] > a {
         border-radius: 8px;
         font-weight: 700;
+    }
+
+    div[data-testid="stLinkButton"] > a[kind="primary"] {
+        background-color: #1f6f9f !important;
+        border-color: #1f6f9f !important;
+        color: #ffffff !important;
+    }
+
+    div[data-testid="stLinkButton"] > a[kind="primary"]:hover {
+        background-color: #0d3b66 !important;
+        border-color: #0d3b66 !important;
+        color: #ffffff !important;
     }
     </style>
     """,
@@ -865,27 +878,20 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown('<h3 class="nav-heading">Continue exploring Infrastructure Economics</h3>', unsafe_allow_html=True)
+st.subheader("Continue Exploring Infrastructure Economics")
 
-nav_col_1, nav_col_2, nav_col_3 = st.columns(3)
+nav_col_1, nav_col_2 = st.columns(2, gap="medium")
 
 with nav_col_1:
     st.link_button(
-        "Return to the LCOE calculator page",
-        "https://infraeconomics.co.uk/lcoe-calculator/",
+        "Return to Analytical Tools",
+        "https://infraeconomics.co.uk/analytical-tools/",
         use_container_width=True
     )
 
 with nav_col_2:
     st.link_button(
-        "Electricity prices and solar investment",
-        "https://infraeconomics.co.uk/2026/07/13/are-electricity-prices-high-enough-to-justify-investing-in-a-solar-plant/",
-        use_container_width=True
-    )
-
-with nav_col_3:
-    st.link_button(
-        "Read the practical LCOE guide",
-        "https://infraeconomics.co.uk/2026/07/09/the-levelized-cost-of-energy-lcoe-a-practical-guide-for-solar-investors/",
+        "Visit the Learning Centre",
+        "https://infraeconomics.co.uk/insight/",
         use_container_width=True
     )
