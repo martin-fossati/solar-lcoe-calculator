@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -833,7 +832,7 @@ with st.container(border=True):
     with button_centre:
         st.link_button(
             "Explore the Solar Project Finance Model",
-            "https://infraeconomics.co.uk/solar-plant-project-finance-model/",
+            "https://infraeconomics.co.uk/solar-plant-finance-model-landing-page/",
             use_container_width=True,
             type="primary"
         )
